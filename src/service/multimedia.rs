@@ -1,8 +1,5 @@
-use serde_json::Value;
 use parser::Category;
 use service::Service;
-use service::Outcome;
-use intent::Intent;
 
 #[derive(PartialEq, Eq, Clone)]
 pub struct Multimedia {
@@ -15,9 +12,7 @@ impl Service for Multimedia {
   }
 
   // #[action(actions=[], subjects=[], others=[])]
-  fn handle_action(&self, intent: &Intent) -> Outcome {
-    Outcome::Success(String::from("song.play"), Value::Null)
-  }
+  fn handle_action(&self) {}
 
   fn can_handle(&self) -> bool {
     true

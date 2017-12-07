@@ -4,7 +4,6 @@
 
 extern crate lazy_static;
 extern crate postgres;
-extern crate serde_json;
 
 mod translator;
 mod parser;
@@ -19,10 +18,9 @@ pub fn run(phrase: String) {
   let translated_phrase = translator::translate(normalized_phrase);
   let parsed_words = parser::parse_words(translated_phrase);
   let intent = intent::to_intent(parsed_words);
-  println!("Intent {:?}", intent);
+  println!("{:?}", intent);
 
-  let outcome = dispatcher::dispatch_intent(intent);
-  println!("Outcome {:?}", outcome);
+  dispatcher::dispatch_intent(intent);
 }
 
 fn normalize_phrase(phrase: String) -> String {

@@ -1,6 +1,6 @@
 # Mozzie
 
-**Mozzie** is the core of an artificial intelligence I'm working on **just for fun**, and still in alpha stage, that
+Mozzie is the core of an artificial intelligence I'm working on, and still in alpha stage, that
 takes a phrase and produces an equivalent intent, used by micro-controllers to execute the command parsed.
 
 The logic behind is divided into 5 steps:
