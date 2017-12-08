@@ -1,5 +1,5 @@
 extern crate core;
 
 fn main() {
-    core::run(String::from("avvia canzone su spotify"));
+    core::run(String::from("avvia playlist spinta su spotify"));
 }
