@@ -34,6 +34,7 @@ pub enum Kind {
   Number,
   Date,
   Unknown,
+  Other(String),
 }
 
 impl Kind {
@@ -45,7 +46,8 @@ impl Kind {
       "service" => Kind::Service,
       "number" => Kind::Number,
       "date" => Kind::Date,
-      _ => Kind::Unknown,
+      "unknown" => Kind::Unknown,
+      other => Kind::Other(other.to_string()),
     }
   }
 }

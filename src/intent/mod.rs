@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 /// An Intent contains all the informations about
 /// the action the user wants to perform, categorized by
-/// their type. 
+/// their type.
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct Intent {
@@ -16,7 +16,7 @@ pub struct Intent {
   pub times: Vec<Word>,
   pub services: Vec<Word>,
   pub platforms: Vec<Word>,
-  pub others: Vec<Word>,
+  pub others: HashMap<String, Vec<Word>>,
 }
 
 pub fn to_intent(words: Vec<Word>) -> Intent {
@@ -26,8 +26,24 @@ pub fn to_intent(words: Vec<Word>) -> Intent {
   let times = filter_by_type(&words, Kind::Date);
   let services = filter_by_type(&words, Kind::Service);
   let platforms = filter_by_type(&words, Kind::Platform);
-  let others = filter_by_type(&words, Kind::Unknown);
+  let others = filter_others(&words);
   let category = get_category(&subjects, &actions, &others);
+
+  let others = others.into_iter().fold(HashMap::new(), |mut acc, word| {
+    // Can we remove the .clone()? Also can be simplified?
+
+    if let Kind::Other(kind) = word.kind.clone() {
+      let values = acc.entry(kind).or_insert(Vec::new());
+      (*values).push(word.clone());
+    }
+
+    if let Kind::Unknown = word.kind.clone() {
+      let values = acc.entry(String::from("unknown")).or_insert(Vec::new());
+      (*values).push(word.clone());
+    }
+
+    acc
+  });
 
   Intent {
     category: category,
@@ -45,6 +61,23 @@ fn filter_by_type(words: &Vec<Word>, kind: Kind) -> Vec<Word> {
   words
     .into_iter()
     .filter(|word| word.kind == kind)
+    .map(|word| word.clone())
+    .collect::<Vec<_>>()
+}
+
+fn filter_others(words: &Vec<Word>) -> Vec<Word> {
+  words
+    .into_iter()
+    .filter(|word| match word.kind {
+      Kind::Action => false,
+      Kind::Subject => false,
+      Kind::Platform => false,
+      Kind::Service => false,
+      Kind::Number => false,
+      Kind::Date => false,
+      Kind::Unknown => true,
+      Kind::Other(_) => true,
+    })
     .map(|word| word.clone())
     .collect::<Vec<_>>()
 }
